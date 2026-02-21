@@ -86,10 +86,22 @@ const MessagesPage = () => {
                             <p className="text-xs text-slate-400 truncate">{c.lastMessage}</p>
                         </button>
                     ))}
-                    {/* Direct message to any user */}
+                    {/* Direct message to any user (Filtered by PRD Rules) */}
                     <div className="mt-2 border-t border-slate-100 dark:border-slate-700 pt-2">
                         <p className="text-xs text-slate-400 px-2 mb-1 font-medium uppercase tracking-wider">New Chat</p>
-                        {users.filter(u => u._id !== (user?._id || user?.id)).map(u => (
+                        {users.filter(u => {
+                            // 1. Never show ourselves
+                            if (u._id === (user?._id || user?.id)) return false;
+
+                            // 2. PRD Rules: 
+                            // - Admin ↔ Employee
+                            // - Admin ↔ Client
+                            // - Client ↔ Employee
+                            // Meaning: Non-admins cannot message people of their own role.
+                            if (user?.role !== 'admin' && u.role === user?.role) return false;
+
+                            return true;
+                        }).map(u => (
                             <button key={u._id} onClick={() => setActiveId(u._id)}
                                 className={`w-full text-left px-3 py-2 rounded-xl text-sm mb-1 transition-all hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400`}>
                                 {u.name} <span className="text-xs text-slate-400">({u.role})</span>

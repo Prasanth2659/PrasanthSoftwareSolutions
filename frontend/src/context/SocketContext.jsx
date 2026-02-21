@@ -5,8 +5,10 @@ import toast from 'react-hot-toast';
 
 const SocketContext = createContext();
 
-// Use the current host but route port 5006 for the messaging service socket server
-const SOCKET_URL = `http://${window.location.hostname}:5006`;
+// Point to the single Modular Monolith Backend
+const API_PORT = import.meta.env.VITE_API_URL ? new URL(import.meta.env.VITE_API_URL).port : 5000;
+const host = window.location.hostname;
+const SOCKET_URL = import.meta.env.VITE_API_URL || `http://${host}:${API_PORT}`;
 
 export const SocketProvider = ({ children }) => {
     const { user, token } = useAuth();
@@ -53,7 +55,15 @@ export const SocketProvider = ({ children }) => {
     const clearSenderNotifications = (senderId) => setNotifications(prev => prev.filter(n => n.senderId !== senderId));
 
     return (
-        <SocketContext.Provider value={{ socket, notifications, markAllRead, deleteNotification, clearSenderNotifications }}>
+        <SocketContext.Provider
+            value={{
+                socket,
+                notifications,
+                markAllRead,
+                deleteNotification,
+                clearSenderNotifications
+            }}
+        >
             {children}
         </SocketContext.Provider>
     );

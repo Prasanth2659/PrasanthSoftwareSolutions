@@ -3,35 +3,26 @@ import axios from 'axios';
 // Create the Axios Instance
 const axiosInstance = axios.create();
 
-// Map of route prefixes to their respective microservice ports
-const servicePorts = {
-  '/api/auth': 5001,
-  '/api/users': 5002,
-  '/api/projects': 5003,
-  '/api/services': 5004,
-  '/api/companies': 5004,
-  '/api/service-requests': 5005,
-  '/api/messages': 5006,
-};
+// Centralized Monolith Port
+const API_PORT = import.meta.env.VITE_API_URL ? new URL(import.meta.env.VITE_API_URL).port : 5000;
 
 // Intercept requests to dynamically set the baseURL and attach token
 axiosInstance.interceptors.request.use((config) => {
   // 1. Attach JWT token dynamically
   const token = localStorage.getItem('token');
   if (token) {
-    // In newer Axios versions, config.headers is an AxiosHeaders object.
-    // Re-assigning it with spread syntax destroys the class instance.
-    // Use .set() or direct property assignment instead.
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  // 2. Dynamically set the correct Base URL depending on the route path
+  // 2. Point to the single Modular Monolith Backend
   const host = window.location.hostname;
-  for (const [prefix, port] of Object.entries(servicePorts)) {
-    if (config.url.startsWith(prefix)) {
-      config.baseURL = `http://${host}:${port}`;
-      break;
-    }
+  
+  // If VITE_API_URL is fully defined (like in production Vercel pointing to Render) use it
+  if (import.meta.env.VITE_API_URL) {
+    config.baseURL = import.meta.env.VITE_API_URL;
+  } else {
+    // Local dev fallback
+    config.baseURL = `http://${host}:${API_PORT}`;
   }
 
   return config;

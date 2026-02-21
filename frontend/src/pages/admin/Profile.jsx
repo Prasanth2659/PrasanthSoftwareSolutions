@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { Save } from 'lucide-react';
 
 const Profile = () => {
-    const { user, loginUser } = useAuth();
+    const { user, setUser } = useAuth();
     const [form, setForm] = useState({ name: '', email: '', phone: '', bio: '' });
     const [loading, setLoading] = useState(false);
 
@@ -29,8 +29,11 @@ const Profile = () => {
 
             const res = await updateUser(userId, form);
             toast.success('Profile updated!');
-            // Optional: Re-hydrate user state if backend returns updated info via AuthContext
-            // But getMe will trigger on refresh
+
+            // Re-hydrate the local AuthContext state with the updated user data
+            if (res.data) {
+                setUser(res.data);
+            }
         } catch (err) {
             console.error('[DEBUG Profile] update error:', err);
             toast.error(err.response?.data?.message || 'Error updating profile');
@@ -56,9 +59,11 @@ const Profile = () => {
                     <div><label className="label">Email</label><input type="email" className="input" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} /></div>
                     <div><label className="label">Phone</label><input className="input" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} /></div>
                     <div><label className="label">Bio</label><textarea className="input resize-none" rows={3} value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} /></div>
-                    <button type="submit" disabled={loading} className="btn-primary flex items-center gap-2">
-                        <Save size={16} />{loading ? 'Saving...' : 'Save Changes'}
-                    </button>
+                    <div className="flex justify-center pt-2">
+                        <button type="submit" disabled={loading} className="btn-primary flex items-center gap-2 px-8">
+                            <Save size={16} />{loading ? 'Saving...' : 'Save Changes'}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
