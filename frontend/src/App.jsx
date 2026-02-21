@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { SocketProvider } from './context/SocketContext';
 
 // Pages
 import Login from './pages/Login';
@@ -51,43 +52,45 @@ const RoleRedirect = () => {
 
 const App = () => (
     <AuthProvider>
-        <Toaster position="top-right" toastOptions={{ className: 'rounded-xl text-sm' }} />
-        <BrowserRouter>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/" element={<RoleRedirect />} />
+        <SocketProvider>
+            <Toaster position="top-right" toastOptions={{ className: 'rounded-xl text-sm' }} />
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/" element={<RoleRedirect />} />
 
-                {/* Admin Routes */}
-                <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminLayout /></ProtectedRoute>}>
-                    <Route index element={<AdminDashboard />} />
-                    <Route path="users" element={<AdminUsers />} />
-                    <Route path="companies" element={<AdminCompanies />} />
-                    <Route path="services" element={<AdminServices />} />
-                    <Route path="requests" element={<AdminRequests />} />
-                    <Route path="projects" element={<AdminProjects />} />
-                    <Route path="messages" element={<AdminMessages />} />
-                    <Route path="profile" element={<AdminProfile />} />
-                </Route>
+                    {/* Admin Routes */}
+                    <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminLayout /></ProtectedRoute>}>
+                        <Route index element={<AdminDashboard />} />
+                        <Route path="users" element={<AdminUsers />} />
+                        <Route path="companies" element={<AdminCompanies />} />
+                        <Route path="services" element={<AdminServices />} />
+                        <Route path="requests" element={<AdminRequests />} />
+                        <Route path="projects" element={<AdminProjects />} />
+                        <Route path="messages" element={<AdminMessages />} />
+                        <Route path="profile" element={<AdminProfile />} />
+                    </Route>
 
-                {/* Employee Routes */}
-                <Route path="/employee" element={<ProtectedRoute roles={['employee']}><EmployeeLayout /></ProtectedRoute>}>
-                    <Route index element={<EmployeeDashboard />} />
-                    <Route path="projects" element={<EmployeeProjects />} />
-                    <Route path="messages" element={<EmployeeMessages />} />
-                    <Route path="profile" element={<EmployeeProfile />} />
-                </Route>
+                    {/* Employee Routes */}
+                    <Route path="/employee" element={<ProtectedRoute roles={['employee']}><EmployeeLayout /></ProtectedRoute>}>
+                        <Route index element={<EmployeeDashboard />} />
+                        <Route path="projects" element={<EmployeeProjects />} />
+                        <Route path="messages" element={<EmployeeMessages />} />
+                        <Route path="profile" element={<EmployeeProfile />} />
+                    </Route>
 
-                {/* Client Routes */}
-                <Route path="/client" element={<ProtectedRoute roles={['client']}><ClientLayout /></ProtectedRoute>}>
-                    <Route index element={<ClientDashboard />} />
-                    <Route path="services" element={<ClientServices />} />
-                    <Route path="requests" element={<ClientRequests />} />
-                    <Route path="projects" element={<ClientProjects />} />
-                    <Route path="messages" element={<ClientMessages />} />
-                    <Route path="profile" element={<ClientProfile />} />
-                </Route>
-            </Routes>
-        </BrowserRouter>
+                    {/* Client Routes */}
+                    <Route path="/client" element={<ProtectedRoute roles={['client']}><ClientLayout /></ProtectedRoute>}>
+                        <Route index element={<ClientDashboard />} />
+                        <Route path="services" element={<ClientServices />} />
+                        <Route path="requests" element={<ClientRequests />} />
+                        <Route path="projects" element={<ClientProjects />} />
+                        <Route path="messages" element={<ClientMessages />} />
+                        <Route path="profile" element={<ClientProfile />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </SocketProvider>
     </AuthProvider>
 );
 

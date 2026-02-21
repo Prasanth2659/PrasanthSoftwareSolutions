@@ -1,11 +1,12 @@
 {
   "name": "auth-service",
   "version": "1.0.0",
-  "main": "src/app.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "seed": "node src/seed.js"
+    "start": "NODE_ENV=production node src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "seed": "node src/seed.js",
+    "local": "cross-env NODE_ENV=local nodemon src/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -14,7 +15,10 @@
     "express": "^4.18.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "cross-env": "^7.0.3",
+    "helmet": "^7.1.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

@@ -44,12 +44,50 @@ exports.getThread = async (req, res) => {
   } catch (err) { res.status(500).json({ message: err.message }); }
 };
 
+const { getIo, getReceiverSocketId } = require('../utils/socketManager');
+
 // POST /api/messages — send message
 exports.sendMessage = async (req, res) => {
   try {
+    const senderId = uid(req);
     const { receiverId, content } = req.body;
     if (!receiverId || !content) return res.status(400).json({ message: 'receiverId and content required' });
-    const msg = await Message.create({ sender: uid(req), receiver: receiverId, content });
+
+    // Save to DB
+    const msg = await Message.create({ sender: senderId, receiver: receiverId, content });
+    
+    // Real-Time Socket Emissions
+    try {
+      const io = getIo();
+      const receiverSocketId = getReceiverSocketId(receiverId);
+      
+      console.log('--- DEBUG messageController ---');
+      console.log('req.headers:', req.headers);
+      console.log('senderName from headers:', req.headers['x-user-name']);
+      
+      if (receiverSocketId) {
+        // Emit the actual message to the chat view
+        io.to(receiverSocketId).emit('receive_message', msg);
+        
+        // Extract sender name from the gateway/middleware token headers
+        const senderName = req.headers['x-user-name'] || 'someone';
+
+        // Emit a globally catchable notification event for the Bell Icon
+        console.log('Emitting notification string:', `New message from ${senderName}`);
+        io.to(receiverSocketId).emit('notification', {
+          id: msg._id,
+          type: 'new_message',
+          message: `New message from ${senderName}`, 
+          senderId: senderId,
+          createdAt: msg.createdAt
+        });
+      }
+    } catch (socketErr) {
+      console.error('[Socket emit error]', socketErr);
+    }
+
     res.status(201).json(msg);
-  } catch (err) { res.status(500).json({ message: err.message }); }
+  } catch (err) { 
+    res.status(500).json({ message: err.message }); 
+  }
 };

@@ -1,6 +1,4 @@
-import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import ThemeToggle from '../components/ThemeToggle';
+import DashboardLayout from '../components/DashboardLayout';
 import {
     LayoutDashboard, Users, Building, Briefcase,
     ClipboardList, FolderKanban, MessageSquare, UserCircle
@@ -17,19 +15,8 @@ const links = [
     { to: '/admin/profile', icon: UserCircle, label: 'Profile' },
 ];
 
-const AdminLayout = () => (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900">
-        <Sidebar links={links} />
-        <div className="flex-1 flex flex-col overflow-hidden">
-            <header className="h-14 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-between px-6">
-                <h2 className="text-sm font-semibold text-slate-600 dark:text-slate-300">Admin Portal</h2>
-                <ThemeToggle />
-            </header>
-            <main className="flex-1 overflow-y-auto p-6">
-                <Outlet />
-            </main>
-        </div>
-    </div>
-);
+const AdminLayout = () => {
+    return <DashboardLayout links={links} title="Admin Portal" />;
+};
 
 export default AdminLayout;

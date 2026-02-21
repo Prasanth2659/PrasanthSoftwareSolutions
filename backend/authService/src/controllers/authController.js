@@ -41,7 +41,11 @@ exports.login = async (req, res) => {
 exports.me = async (req, res) => {
   try {
     const userId = req.headers['x-user-id'];
+    console.log('[DEBUG /me] userId from header:', userId);
+    
     const user = await User.findById(userId).select('-password');
+    console.log('[DEBUG /me] user from DB:', user);
+    
     if (!user) return res.status(404).json({ message: 'User not found' });
     res.json(user);
   } catch (err) {
