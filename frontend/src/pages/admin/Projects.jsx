@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getProjects, createProject, deleteProject, assignProject, getUsers } from '../../api/api';
 import toast from 'react-hot-toast';
 import { Plus, Trash2, X, UserCheck } from 'lucide-react';
@@ -80,7 +81,11 @@ const Projects = () => {
                     <tbody>
                         {projects.map(p => (
                             <tr key={p._id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/20">
-                                <td className="px-5 py-3 font-medium">{p.name}</td>
+                                <td className="px-5 py-3 font-medium">
+                                    <Link to={`/admin/projects/${p._id}`} className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 hover:underline">
+                                        {p.name}
+                                    </Link>
+                                </td>
                                 <td className="px-5 py-3 text-slate-500">{getName(p.client)}</td>
                                 <td className="px-5 py-3"><span className={statusBadge[p.status]}>{p.status.replace('_', ' ')}</span></td>
                                 <td className="px-5 py-3 text-slate-500 text-xs">{p.assignedEmployees?.length || 0} assigned</td>

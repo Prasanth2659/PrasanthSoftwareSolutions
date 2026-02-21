@@ -82,6 +82,12 @@ export const createProject    = (data)        => axiosInstance.post('/api/projec
 export const updateProject    = (id, data)    => axiosInstance.put(`/api/projects/${id}`, data);
 export const assignProject    = (id, data)    => axiosInstance.put(`/api/projects/${id}/assign`, data);
 export const deleteProject    = (id)          => axiosInstance.delete(`/api/projects/${id}`);
+export const uploadProjectFiles = (id, formData) => axiosInstance.post(`/api/projects/${id}/files`, formData, {
+  headers: { 'Content-Type': 'multipart/form-data' }
+});
+export const addProjectPayment  = (id, data) => axiosInstance.put(`/api/projects/${id}/payments`, data);
+export const createRazorpayOrder = (id) => axiosInstance.post(`/api/projects/${id}/razorpay-order`);
+export const verifyRazorpayPayment = (id, data) => axiosInstance.post(`/api/projects/${id}/razorpay-verify`, data);
 
 // Messages
 export const getConversations = ()       => axiosInstance.get('/api/messages/conversations');

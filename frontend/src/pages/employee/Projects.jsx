@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getProjects, updateProject } from '../../api/api';
 import toast from 'react-hot-toast';
 
@@ -40,7 +41,11 @@ const EmployeeProjects = () => {
                     <tbody>
                         {projects.map(p => (
                             <tr key={p._id} className="border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/20">
-                                <td className="px-5 py-3 font-medium text-slate-800 dark:text-white">{p.name}</td>
+                                <td className="px-5 py-3 font-medium">
+                                    <Link to={`/employee/projects/${p._id}`} className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 hover:underline">
+                                        {p.name}
+                                    </Link>
+                                </td>
                                 <td className="px-5 py-3 text-slate-500 max-w-[200px] truncate">{p.description || '—'}</td>
                                 <td className="px-5 py-3"><span className={statusBadge[p.status]}>{p.status.replace('_', ' ')}</span></td>
                                 <td className="px-5 py-3">

@@ -33,6 +33,9 @@ import ClientProjects from './pages/client/Projects';
 import ClientMessages from './pages/client/Messages';
 import ClientProfile from './pages/client/Profile';
 
+// Projects (Details)
+import ProjectDetails from './pages/admin/ProjectDetails';
+
 const ProtectedRoute = ({ children, roles }) => {
     const { user, loading } = useAuth();
     if (loading) return <div className="min-h-screen flex items-center justify-center text-slate-400">Loading...</div>;
@@ -67,6 +70,7 @@ const App = () => (
                         <Route path="services" element={<AdminServices />} />
                         <Route path="requests" element={<AdminRequests />} />
                         <Route path="projects" element={<AdminProjects />} />
+                        <Route path="projects/:id" element={<ProjectDetails />} />
                         <Route path="messages" element={<AdminMessages />} />
                         <Route path="profile" element={<AdminProfile />} />
                     </Route>
@@ -75,6 +79,7 @@ const App = () => (
                     <Route path="/employee" element={<ProtectedRoute roles={['employee']}><EmployeeLayout /></ProtectedRoute>}>
                         <Route index element={<EmployeeDashboard />} />
                         <Route path="projects" element={<EmployeeProjects />} />
+                        <Route path="projects/:id" element={<ProjectDetails />} />
                         <Route path="messages" element={<EmployeeMessages />} />
                         <Route path="profile" element={<EmployeeProfile />} />
                     </Route>
@@ -85,6 +90,7 @@ const App = () => (
                         <Route path="services" element={<ClientServices />} />
                         <Route path="requests" element={<ClientRequests />} />
                         <Route path="projects" element={<ClientProjects />} />
+                        <Route path="projects/:id" element={<ProjectDetails />} />
                         <Route path="messages" element={<ClientMessages />} />
                         <Route path="profile" element={<ClientProfile />} />
                     </Route>

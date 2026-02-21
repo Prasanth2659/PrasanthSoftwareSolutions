@@ -31,6 +31,9 @@ app.get("/health", (req, res) => {
   res.status(200).json({ success: true, message: "projectService running", version: "1.0.0" });
 });
 
+// Serve the uploads folder statically
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 app.use("/api", verifyToken);
 app.use("/api/projects", projectRoutes);
 
