@@ -23,13 +23,18 @@ const ServiceRequests = () => {
     const handleApprove = async (req) => {
         try {
             await approveRequest(req._id);
+            const serviceModel = services.find(s => s._id === req.service);
+            const servicePrice = serviceModel ? serviceModel.price : 0;
+            const serviceName = serviceModel ? serviceModel.name : req.service;
+
             // Auto-create project
             await createProject({
-                name: `Project for ${getName(req.service, services)}`,
-                description: `Auto-created from service request`,
+                name: `Project for ${serviceName}`,
+                description: `Auto-created from service request.`,
                 client: req.client,
                 serviceRequest: req._id,
                 status: 'not_started',
+                totalAmount: servicePrice
             });
             toast.success('Approved & project created!');
             load();
